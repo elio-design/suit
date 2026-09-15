@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atelier — Bespoke Suit Configurator Demo</title>
+<style>
+:root{--ink:#171716;--muted:#77736c;--line:#dedbd4;--paper:#f7f5f0;--card:#fffdfa;--accent:#b59a70;--dark:#22211f}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.topbar{height:34px;background:#171716;color:#eee;display:flex;align-items:center;justify-content:center;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+nav{height:76px;background:rgba(247,245,240,.94);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;position:sticky;top:0;z-index:20;backdrop-filter:blur(10px)}
+.logo{font-family:Georgia,serif;letter-spacing:.16em;font-size:20px}.navlinks{display:flex;gap:28px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}.navlinks a{color:inherit;text-decoration:none}.admin-link{color:var(--muted)}
+.hero{padding:70px 5vw 30px;display:grid;grid-template-columns:1.1fr .9fr;gap:70px;max-width:1450px;margin:auto;align-items:end}
+.eyebrow{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+h1{font:500 clamp(48px,7vw,92px)/.93 Georgia,serif;letter-spacing:-.045em;margin:0 0 26px;max-width:800px}
+.hero p{max-width:590px;color:#625e57;line-height:1.75;font-size:15px}.hero-note{border-left:1px solid var(--accent);padding-left:18px;font-size:12px;color:#6c675f;line-height:1.7}
+.config{max-width:1450px;margin:25px auto 90px;padding:0 5vw}.config-shell{background:var(--card);border:1px solid var(--line);display:grid;grid-template-columns:58% 42%;min-height:680px}
+.visual{background:#f0eee9;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px}.visual:after{content:"BESPOKE / 01";position:absolute;bottom:24px;left:28px;font-size:10px;letter-spacing:.2em;color:#9a958c}
+.suit-wrap{width:100%;height:100%;min-height:650px;display:flex;align-items:center;justify-content:center}.suit-wrap img{width:auto;height:82%;max-width:92%;max-height:82%;object-fit:contain;image-rendering:auto;transform:none;filter:drop-shadow(0 24px 28px rgba(0,0,0,.08))}
+.visual-meta{position:absolute;top:28px;left:28px;font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#77736b}.visual-price{position:absolute;top:26px;right:28px;text-align:right}.visual-price small{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#77736b}.visual-price strong{font:500 25px Georgia,serif}
+.controls{padding:42px 42px 35px;display:flex;flex-direction:column}.section-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#817b72;margin-bottom:15px}.model-tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:35px}.model-tab{border:1px solid var(--line);background:transparent;padding:12px 14px;text-align:left;min-width:145px}.model-tab.active{background:#22211f;color:white;border-color:#22211f}.model-tab span{display:block;font-size:12px}.model-tab small{display:block;color:#8c877f;margin-top:4px;font-size:9px}.model-tab.active small{color:#bbb5aa}
+.fabric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-height:370px;overflow:auto;padding-right:3px}.fabric-card{border:1px solid var(--line);background:#fff;padding:0;text-align:left;transition:.2s;position:relative}.fabric-card:hover{transform:translateY(-2px)}.fabric-card.active{border:2px solid #22211f}.swatch{height:112px;overflow:hidden;background:#444}.swatch img{width:100%;height:100%;object-fit:cover}.fabric-info{padding:10px 10px 12px}.fabric-name{font-size:11px}.fabric-code{font-size:9px;color:#8a857c;margin-top:4px;letter-spacing:.08em}.fabric-price{font-size:9px;color:#6e695f;margin-top:7px}.check{position:absolute;right:7px;top:7px;width:18px;height:18px;border-radius:50%;background:#222;color:#fff;display:none;align-items:center;justify-content:center;font-size:11px}.active .check{display:flex}
+.estimate{border-top:1px solid var(--line);margin-top:auto;padding-top:22px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.estimate p{margin:0;color:#77736c;font-size:12px;line-height:1.5}.estimate strong{font:500 30px Georgia,serif}.actions{display:flex;gap:10px;margin-top:18px}.btn{border:1px solid #222;background:#222;color:#fff;padding:14px 20px;letter-spacing:.12em;text-transform:uppercase;font-size:10px}.btn.alt{background:transparent;color:#222}.btn:hover{opacity:.9}
+.story{max-width:1450px;margin:0 auto 100px;padding:0 5vw;display:grid;grid-template-columns:1fr 1fr;gap:60px}.story-card{background:#eae7df;padding:52px}.story h2{font:500 44px Georgia,serif;margin:0 0 15px}.story p{color:#68635b;line-height:1.75;font-size:14px}.swatch-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.swatch-strip img{width:100%;height:100px;object-fit:cover}.footer{padding:45px 5vw;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:#7d776e;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.modal{position:fixed;inset:0;background:rgba(20,19,17,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}.modal.open{display:flex}.modal-card{background:#faf8f3;width:min(520px,100%);padding:34px;border:1px solid #ddd7cc}.modal-card h3{font:500 34px Georgia,serif;margin:0 0 8px}.modal-card p{color:#706b63;line-height:1.6;font-size:13px}.modal-card input{width:100%;padding:13px;border:1px solid var(--line);background:#fff;margin:10px 0 15px}.modal-actions{display:flex;gap:10px}
+#adminView{display:none}.admin-wrap{max-width:1300px;margin:0 auto;padding:55px 5vw}.admin-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:35px}.admin-head h1{font-size:55px}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.admin-card{background:#fff;border:1px solid var(--line);padding:25px}.admin-card h3{font:500 28px Georgia,serif;margin:0 0 20px}.admin-row{display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid var(--line);padding:14px 0;align-items:center}.admin-row small{display:block;color:#858078;margin-top:3px}.mini-btn{border:1px solid #bbb4aa;background:transparent;padding:8px 10px;font-size:10px}.danger{color:#8b3f35}.admin-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.admin-form input,.admin-form select{padding:11px;border:1px solid var(--line);background:#fbfaf7}.admin-form .full{grid-column:1/-1}.notice{padding:12px;background:#f0eee8;color:#716b62;font-size:11px;line-height:1.5;margin-bottom:18px}.mapping{overflow:auto}.mapping table{width:100%;border-collapse:collapse;font-size:11px}.mapping th,.mapping td{border:1px solid var(--line);padding:9px;text-align:left}.mapping input{max-width:190px;padding:7px;border:1px solid var(--line)}
+@media(max-width:950px){.hero{grid-template-columns:1fr;gap:20px;padding-top:45px}.config-shell{grid-template-columns:1fr}.visual{min-height:620px}.suit-wrap{min-height:620px}.story{grid-template-columns:1fr}.navlinks{display:none}.controls{padding:28px}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.visual{min-height:560px}.suit-wrap{min-height:560px}.suit-wrap img{height:82%;max-height:82%;width:auto;max-width:92%;transform:none}.fabric-grid{grid-template-columns:repeat(2,1fr)}.suit-wrap{height:480px;width:88%}.visual{padding:20px}.actions{flex-direction:column}.footer{display:block}.footer span{display:block;margin:8px 0}.admin-form{grid-template-columns:1fr}.admin-head{display:block}}
+</style>
+</head>
+<body>
+<div id="siteView">
+<div class="topbar">Private tailoring · By appointment only</div>
+<nav><div class="logo">ATELIER / DEMO</div><div class="navlinks"><a href="#config">Configure</a><a href="#craft">The House</a><a href="#" onclick="openAppointment(event)">Appointment</a><a class="admin-link" href="#admin" onclick="showAdmin(event)">Admin</a></div></nav>
+
+<header class="hero">
+<div><div class="eyebrow">Bespoke tailoring / digital fitting room</div><h1>Cut for you.<br>Rendered in cloth.</h1><p>A polished working sample for a made-to-measure tailoring house. Select a silhouette, explore the cloth library, and see the prepared fabric visualization update instantly.</p></div>
+<div class="hero-note">This demo uses the supplied suit illustrations and supplied fabric textures. The model silhouette stays fixed; only the prepared cloth visualization changes.</div>
+</header>
+
+<section class="config" id="config">
+<div class="config-shell">
+<div class="visual">
+<div class="visual-meta" id="visualMeta">ATELIER SINGLE-BREASTED</div>
+<div class="visual-price"><small>Estimated from</small><strong id="price">$1,895</strong></div>
+<div class="suit-wrap"><img id="suitImage" src="" alt="Selected suit model in selected fabric"></div>
+</div>
+<div class="controls">
+<div class="section-label">01 / Choose your model</div>
+<div class="model-tabs" id="modelTabs"></div>
+<div class="section-label">02 / Choose your cloth</div>
+<div class="fabric-grid" id="fabricGrid"></div>
+<div class="estimate"><p><b id="selectedModelName">—</b><br><span id="selectedFabricName">—</span> · prepared visualization</p><div><small style="display:block;text-align:right;color:#817b72">ESTIMATE</small><strong id="estimate">$1,895</strong></div></div>
+<div class="actions"><button class="btn" onclick="openAppointment(event)">Book an Appointment</button><button class="btn alt" onclick="resetConfig()">Reset selection</button></div>
+</div>
+</div>
+</section>
+
+<section class="story" id="craft">
+<div class="story-card"><div class="eyebrow">The cloth library</div><h2>Texture before measurement.</h2><p>Each swatch is presented as a quiet material study. In the production build, these records can be connected to your complete fabric library, availability rules, pricing and prepared model/fabric imagery.</p><div class="swatch-strip" id="strip"></div></div>
+<div><div class="eyebrow">How the full version can grow</div><h2 style="font:500 44px Georgia,serif;margin:0 0 18px">From visual sample to atelier system.</h2><p style="color:#68635b;line-height:1.8;font-size:14px">The demo keeps the suit illustration unchanged and swaps in prepared combination images. A later phase can replace those prepared assets with a dynamic fabric-rendering pipeline while keeping the same customer experience.</p><p style="color:#68635b;line-height:1.8;font-size:14px">The included demo admin also shows the intended content workflow: models, fabrics, pricing, activation and model/fabric image mappings.</p></div>
+</section>
+
+<footer class="footer"><span>Atelier / Bespoke Demo</span><span>Made-to-measure · No checkout</span><span><a href="#admin" onclick="showAdmin(event)" style="color:inherit">Demo Admin</a></span></footer>
+</div>
+
+<div id="adminView">
+<div class="topbar">Demo content management · Local browser storage</div>
+<div class="admin-wrap">
+<div class="admin-head"><div><div class="eyebrow">Content management</div><h1>Atelier Admin</h1><p style="color:#706b63;max-width:700px;line-height:1.6">This sample admin is functional in the browser using localStorage. Changes made here update the configurator immediately.</p></div><button class="btn" onclick="showSite()">Back to site</button></div>
+<div class="notice">For this prototype, uploads and edits are stored only in this browser. A production admin can use a database + cloud storage with authenticated access.</div>
+<div class="admin-grid">
+<div class="admin-card"><h3>Models</h3><div id="adminModels"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><div class="admin-form"><input id="newModelName" placeholder="Model name"><input id="newModelSub" placeholder="Short description"><button class="btn full" onclick="addModel()">Add model</button></div></div>
+<div class="admin-card"><h3>Fabrics</h3><div id="adminFabrics"></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><div class="admin-form"><input id="newFabricName" placeholder="Fabric name"><input id="newFabricCode" placeholder="Fabric code"><input id="newFabricPrice" type="number" placeholder="Price +"><label class="full" style="font-size:11px;color:#706b63">Upload fabric image <input id="newFabricImage" type="file" accept="image/*" style="margin-top:7px"></label><button class="btn full" onclick="addFabric()">Add fabric</button></div></div>
+<div class="admin-card" style="grid-column:1/-1"><h3>Model / fabric image mapping</h3><p style="color:#77736c;font-size:12px;line-height:1.5">Each cell can point to a prepared combination image. This is how the demo swaps the suit while preserving the exact model silhouette.</p><div class="mapping" id="mapping"></div></div>
+<div class="admin-card"><h3>Defaults & appointment</h3><div class="admin-form"><select id="defaultModel"></select><select id="defaultFabric"></select><input id="calendlyUrl" class="full" placeholder="Calendly URL"><button class="btn full" onclick="saveSettings()">Save settings</button></div></div>
+</div>
+</div>
+</div>
+
+<div class="modal" id="appointmentModal"><div class="modal-card"><div class="eyebrow">Appointment</div><h3>Book your fitting.</h3><p>Enter your Calendly link once in the demo admin, or use the placeholder below. In the full project this button can open your live Calendly booking page directly.</p><input id="calLink" value=""><div class="modal-actions"><button class="btn" onclick="goCalendly()">Open Calendly</button><button class="btn alt" onclick="closeAppointment()">Close</button></div></div></div>
+
+<script>
+const BASE_PRICE=1895;
+const seed={"models": [{"id": "atelier-blue", "name": "The Atelier Single-Breasted", "subtitle": "Soft shoulder \u00b7 2-button \u00b7 Notch lapel", "base": "atelier-blue_base.png", "active": true}, {"id": "atelier-ivory", "name": "The Atelier Ivory Cut", "subtitle": "Soft shoulder \u00b7 2-button \u00b7 Notch lapel", "base": "atelier-ivory_base.png", "active": true}, {"id": "atelier-grey", "name": "The Atelier Grey Cut", "subtitle": "Structured shoulder \u00b7 2-button \u00b7 Notch lapel", "base": "atelier-grey_base.png", "active": true}], "fabrics": [{"id": "f1", "name": "Midnight Herringbone", "code": "H&S-DEMO-01", "price": 0, "image": "fabric_1.png", "active": true}, {"id": "f2", "name": "Graphite Twill", "code": "H&S-DEMO-02", "price": 85, "image": "fabric_2.png", "active": true}, {"id": "f3", "name": "Slate Micro-Weave", "code": "H&S-DEMO-03", "price": 120, "image": "fabric_3.png", "active": true}, {"id": "f4", "name": "Deep Charcoal", "code": "H&S-DEMO-04", "price": 160, "image": "fabric_4.png", "active": true}, {"id": "f5", "name": "Stone Grey", "code": "H&S-DEMO-05", "price": 195, "image": "fabric_5.png", "active": true}, {"id": "f6", "name": "Espresso Wool", "code": "H&S-DEMO-06", "price": 225, "image": "fabric_6.png", "active": true}], "combos": {"atelier-blue": {"f1": "atelier-blue_fabric_1.png", "f2": "atelier-blue_fabric_2.png", "f3": "atelier-blue_fabric_3.png", "f4": "atelier-blue_fabric_4.png", "f5": "atelier-blue_fabric_5.png", "f6": "atelier-blue_fabric_6.png"}, "atelier-ivory": {"f1": "atelier-ivory_fabric_1.png", "f2": "atelier-ivory_fabric_2.png", "f3": "atelier-ivory_fabric_3.png", "f4": "atelier-ivory_fabric_4.png", "f5": "atelier-ivory_fabric_5.png", "f6": "atelier-ivory_fabric_6.png"}, "atelier-grey": {"f1": "atelier-grey_fabric_1.png", "f2": "atelier-grey_fabric_2.png", "f3": "atelier-grey_fabric_3.png", "f4": "atelier-grey_fabric_4.png", "f5": "atelier-grey_fabric_5.png", "f6": "atelier-grey_fabric_6.png"}}, "defaultModel": "atelier-blue", "defaultFabric": "f1", "calendly": "https://calendly.com/"};
+let state=JSON.parse(localStorage.getItem('atelierDemoState')||'null')||seed;
+function save(){localStorage.setItem('atelierDemoState',JSON.stringify(state))}
+function activeModels(){return state.models.filter(x=>x.active)}
+function activeFabrics(){return state.fabrics.filter(x=>x.active)}
+function currentModel(){return state.models.find(x=>x.id===state.selectedModel)||activeModels()[0]}
+function currentFabric(){return state.fabrics.find(x=>x.id===state.selectedFabric)||activeFabrics()[0]}
+function comboImage(mid,fid){return state.combos?.[mid]?.[fid]||''}
+function renderSite(){
+ const ms=activeModels(), fs=activeFabrics();
+ if(!ms.length||!fs.length)return;
+ if(!ms.some(x=>x.id===state.selectedModel))state.selectedModel=ms[0].id;
+ if(!fs.some(x=>x.id===state.selectedFabric))state.selectedFabric=fs[0].id;
+ const m=currentModel(), f=currentFabric(), path=comboImage(m.id,f.id)||m.base;
+ document.getElementById('suitImage').src=path;
+ document.getElementById('visualMeta').textContent=m.name.toUpperCase();
+ document.getElementById('selectedModelName').textContent=m.name;
+ document.getElementById('selectedFabricName').textContent=f.name+' · '+f.code;
+ const total=BASE_PRICE+Number(f.price||0);
+ document.getElementById('price').textContent='$'+total.toLocaleString();
+ document.getElementById('estimate').textContent='$'+total.toLocaleString();
+ document.getElementById('modelTabs').innerHTML=ms.map(x=>`<button class="model-tab ${x.id===m.id?'active':''}" onclick="selectModel('${x.id}')"><span>${esc(x.name)}</span><small>${esc(x.subtitle||'')}</small></button>`).join('');
+ document.getElementById('fabricGrid').innerHTML=fs.map(x=>`<button class="fabric-card ${x.id===f.id?'active':''}" onclick="selectFabric('${x.id}')"><span class="check">✓</span><div class="swatch"><img src="${x.image}" alt=""></div><div class="fabric-info"><div class="fabric-name">${esc(x.name)}</div><div class="fabric-code">${esc(x.code)}</div><div class="fabric-price">${Number(x.price||0)?'+ $'+Number(x.price).toLocaleString():'Included'}</div></div></button>`).join('');
+ document.getElementById('strip').innerHTML=fs.map(x=>`<img src="${x.image}" title="${esc(x.name)}" alt="">`).join('');
+ save();
+}
+function selectModel(id){state.selectedModel=id;renderSite()}
+function selectFabric(id){state.selectedFabric=id;renderSite()}
+function resetConfig(){state.selectedModel=state.defaultModel;state.selectedFabric=state.defaultFabric;renderSite()}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function showAdmin(e){if(e)e.preventDefault();document.getElementById('siteView').style.display='none';document.getElementById('adminView').style.display='block';location.hash='admin';renderAdmin()}
+function showSite(){document.getElementById('adminView').style.display='none';document.getElementById('siteView').style.display='block';location.hash='config';renderSite()}
+function renderAdmin(){
+ document.getElementById('adminModels').innerHTML=state.models.map(m=>`<div class="admin-row"><div><b>${esc(m.name)}</b><small>${esc(m.subtitle||'')}</small></div><div><button class="mini-btn" onclick="toggleModel('${m.id}')">${m.active?'Active':'Hidden'}</button> <button class="mini-btn danger" onclick="removeModel('${m.id}')">Remove</button></div></div>`).join('');
+ document.getElementById('adminFabrics').innerHTML=state.fabrics.map(f=>`<div class="admin-row"><div><b>${esc(f.name)}</b><small>${esc(f.code)} · +$${Number(f.price||0)}</small></div><div><button class="mini-btn" onclick="toggleFabric('${f.id}')">${f.active?'Active':'Hidden'}</button> <button class="mini-btn danger" onclick="removeFabric('${f.id}')">Remove</button></div></div>`).join('');
+ document.getElementById('defaultModel').innerHTML=state.models.map(m=>`<option value="${m.id}" ${m.id===state.defaultModel?'selected':''}>${esc(m.name)}</option>`).join('');
+ document.getElementById('defaultFabric').innerHTML=state.fabrics.map(f=>`<option value="${f.id}" ${f.id===state.defaultFabric?'selected':''}>${esc(f.name)}</option>`).join('');
+ document.getElementById('calendlyUrl').value=state.calendly||'';
+ document.getElementById('mapping').innerHTML=`<table><thead><tr><th>Model</th>${state.fabrics.map(f=>`<th>${esc(f.name)}</th>`).join('')}</tr></thead><tbody>${state.models.map(m=>`<tr><td><b>${esc(m.name)}</b></td>${state.fabrics.map(f=>`<td><input value="${esc(comboImage(m.id,f.id))}" onchange="setCombo('${m.id}','${f.id}',this.value)" placeholder="prepared-image.png"></td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function toggleModel(id){let x=state.models.find(x=>x.id===id);x.active=!x.active;save();renderAdmin();renderSite()}
+function toggleFabric(id){let x=state.fabrics.find(x=>x.id===id);x.active=!x.active;save();renderAdmin();renderSite()}
+function removeModel(id){if(state.models.length<=1)return alert('Keep at least one model in the demo.');state.models=state.models.filter(x=>x.id!==id);Object.keys(state.combos||{}).forEach(k=>{if(k===id)delete state.combos[k]});save();renderAdmin();renderSite()}
+function removeFabric(id){if(state.fabrics.length<=1)return alert('Keep at least one fabric in the demo.');state.fabrics=state.fabrics.filter(x=>x.id!==id);Object.values(state.combos||{}).forEach(x=>delete x[id]);save();renderAdmin();renderSite()}
+function addModel(){const name=document.getElementById('newModelName').value.trim();if(!name)return;const id='m'+Date.now();state.models.push({id,name,subtitle:document.getElementById('newModelSub').value.trim(),base:state.models[0].base,active:true});state.combos[id]={};state.fabrics.forEach(f=>state.combos[id][f.id]=state.models[0].base);save();renderAdmin();renderSite()}
+function addFabric(){
+ const name=document.getElementById('newFabricName').value.trim(),code=document.getElementById('newFabricCode').value.trim()||'CUSTOM';
+ if(!name)return;
+ const id='f'+Date.now(), file=document.getElementById('newFabricImage').files[0];
+ const finish=(img)=>{state.fabrics.push({id,name,code,price:Number(document.getElementById('newFabricPrice').value||0),image:img,active:true});Object.keys(state.combos).forEach(mid=>state.combos[mid][id]=state.models[0].base);save();renderAdmin();renderSite()};
+ if(file){const r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file)}else finish(state.fabrics[0].image);
+}
+function setCombo(mid,fid,val){state.combos[mid][fid]=val;save()}
+function saveSettings(){state.defaultModel=document.getElementById('defaultModel').value;state.defaultFabric=document.getElementById('defaultFabric').value;state.calendly=document.getElementById('calendlyUrl').value.trim()||'https://calendly.com/';save();alert('Settings saved.');renderSite()}
+function openAppointment(e){if(e)e.preventDefault();document.getElementById('calLink').value=state.calendly||'https://calendly.com/';document.getElementById('appointmentModal').classList.add('open')}
+function closeAppointment(){document.getElementById('appointmentModal').classList.remove('open')}
+function goCalendly(){const u=document.getElementById('calLink').value.trim();if(!u)return;window.open(u,'_blank','noopener')}
+window.addEventListener('hashchange',()=>location.hash==='#admin'?showAdmin():showSite());
+if(location.hash==='#admin')showAdmin();else renderSite();
+</script>
+</body></html>
